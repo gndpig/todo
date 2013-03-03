@@ -1,0 +1,31 @@
+!!! Rails 4.0
+
+!! Spork でエラー
+
+{{pre
+gndpig@gndpig[~/rails4/todo]$ bundle exec spork
+Using RSpec
+Preloading Rails environment
+uninitialized constant ActiveModel::Observing (NameError)
+/Users/gndpig/rails4/todo/vendor/bundle/ruby/2.0.0/gems/spork-0.9.2/lib/spork/app_framework/rails.rb:56:in `preload_rails'
+/Users/gndpig/rails4/todo/vendor/bundle/ruby/2.0.0/gems/spork-0.9.2/lib/spork/app_framework/rails.rb:7:in `preload'
+/Users/gndpig/rails4/todo/vendor/bundle/ruby/2.0.0/gems/spork-0.9.2/lib/spork/test_framework.rb:134:in `block in preload'
+/Users/gndpig/rails4/todo/vendor/bundle/ruby/2.0.0/gems/spork-0.9.2/lib/spork.rb:62:in `exec_prefork'
+/Users/gndpig/rails4/todo/vendor/bundle/ruby/2.0.0/gems/spork-0.9.2/lib/spork/test_framework.rb:120:in `preload'
+/Users/gndpig/rails4/todo/vendor/bundle/ruby/2.0.0/gems/spork-0.9.2/lib/spork/run_strategy/forking.rb:25:in `preload'
+/Users/gndpig/rails4/todo/vendor/bundle/ruby/2.0.0/gems/spork-0.9.2/lib/spork/runner.rb:74:in `run'
+/Users/gndpig/rails4/todo/vendor/bundle/ruby/2.0.0/gems/spork-0.9.2/lib/spork/runner.rb:10:in `run'
+/Users/gndpig/rails4/todo/vendor/bundle/ruby/2.0.0/gems/spork-0.9.2/bin/spork:10:in `<top (required)>'
+/Users/gndpig/rails4/todo/vendor/bundle/ruby/2.0.0/bin/spork:23:in `load'
+/Users/gndpig/rails4/todo/vendor/bundle/ruby/2.0.0/bin/spork:23:in `<main>'
+}}
+
+https://github.com/sahilm/spork-rails/commit/8b49e3d6ea85b2f1d23eb3fb148b7e971eb4e614
+
+lib/spork/app_framework_rails.rb
+
+{{pre
+-    Spork.trap_method(::ActiveModel::Observing::ClassMethods, :instantiate_observers)
+ 	 57	
++    Spork.trap_method(::ActiveModel::Observing::ClassMethods, :instantiate_observers) if defined?(ActiveModel::Observing
+}}
